@@ -13,13 +13,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+
 WORKDIR /var/www/html
 
-# Copiar el proyecto antes de Composer: sus scripts ejecutan artisan package:discover.
 COPY . .
+
+# Crear directorios necesarios para Laravel.
+RUN mkdir -p bootstrap/cache \
+    storage/framework/cache/data \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/logs \
+    && chmod -R 775 bootstrap/cache storage
 
 # Instalar dependencias PHP de producción.
 RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
 
 # Apache debe servir la carpeta public de Laravel.
 RUN sed -ri 's!/var/www/html!/var/www/html/public!g' \
