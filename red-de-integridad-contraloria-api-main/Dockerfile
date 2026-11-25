@@ -1,4 +1,4 @@
-FROM php:8.3-apache
+FROM php:8.4-apache
 
 # Extensiones necesarias para Laravel y las consultas HTTP a la Contraloría.
 
