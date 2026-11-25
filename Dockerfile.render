@@ -1,11 +1,14 @@
 FROM php:8.3-apache
 
 # Extensiones necesarias para Laravel y las consultas HTTP a la Contraloría.
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git unzip libcurl4-openssl-dev libonig-dev libzip-dev \
+    libsqlite3-dev pkg-config \
     && docker-php-ext-install curl mbstring pdo_sqlite sqlite3 zip \
     && a2enmod rewrite headers \
     && rm -rf /var/lib/apt/lists/*
+
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
